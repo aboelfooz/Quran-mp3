@@ -1,0 +1,160 @@
+/* ====== استيراد خط جميل ====== */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap');
+
+/* ====== تنسيق عام للصفحة ====== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    text-align: center;
+    background: url('https://u7.uidownload.com/vector/198/1/vector-black-background-design-eps.jpg') repeat;
+    background-size: contain;
+    background-attachment: fixed;
+    color: white;
+}
+
+/* ====== ترويسة الموقع ====== */
+header {
+    background: #000;
+    color: #fff;
+    text-align: center;
+    padding: 30px 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 20px 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+/* ====== زر القائمة الجانبية ====== */
+.menu-btn {
+    display: none;
+    position: fixed; /* تثبيت الزر ليبقى في الأعلى */
+    top: 8px;
+    right: 15px;
+    background: #2A2A2A; /* لون داكن */
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.3s ease-in-out;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1100; /* أعلى من القائمة الجانبية */
+}
+
+.menu-btn:hover {
+    background: #555;
+    transform: scale(1.1);
+}
+
+.menu-btn:active {
+    background: #222;
+    transform: scale(0.95);
+}
+
+/* ====== القائمة الجانبية ====== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -250px; /* مخفية خارج الشاشة */
+    width: 250px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    padding-top: 60px;
+    z-index: 1000; /* أقل من زر القائمة */
+}
+
+.sidebar.active {
+    right: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    display: block;
+    transition: color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    color: #007bff;
+}
+
+/* ====== قائمة القرّاء ====== */
+.reciters-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px;
+}
+
+.reciter {
+    background: white;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 20px;
+    width: 250px;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.reciter:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+    background: #f8f9fa;
+}
+
+.reciter h2 {
+    margin: 0;
+    color: #007bff;
+    font-size: 22px;
+}
+
+.reciter p {
+    color: #666;
+}
+
+.reciter img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* ====== تحسين استجابة التصميم للشاشات الصغيرة ====== */
+@media (max-width: 768px) {
+    .menu-btn {
+        display: block;
+    }
+
+    .reciters-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .reciter {
+        width: 90%;
+    }
+}
