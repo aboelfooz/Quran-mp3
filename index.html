@@ -1,148 +1,351 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع القرآن الكريم</title>
+    <meta name="description" content="موقع القرآن الكريم - استمع وتدبر مع أشهر القراء">
+    <meta name="theme-color" content="#0a3a5a">
+    <title>القرآن الكريم - موقع القرآن حياة</title>
     <link rel="stylesheet" href="style.css">
-   
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- شريط التحميل -->
+    <div class="progress-bar"></div>
+
+    <!-- الزر العائم للعودة للأعلى -->
+    <button class="scroll-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <header>
         <button class="menu-btn">
-            <i class="fa-solid fa-bars">القائمة</i>
-      </button>
-        <h1>القرآن حياة</h1>
+            <i class="fa-solid fa-bars"></i>
+            <span>القائمة</span>
+        </button>
+        <div class="header-content">
+            <h1>القرآن حياة</h1>
+            <p>تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</p>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="ابحث عن قارئ..." class="search-input">
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
     </header>
 
     <!-- القائمة الجانبية -->
     <aside class="sidebar">
-        <h2>القائمة الجانبية</h2>
+        <div class="sidebar-header">
+            <h2><i class="fas fa-quran"></i> القائمة</h2>
+            <button class="close-sidebar"><i class="fas fa-times"></i></button>
+        </div>
         <ul>
-            <li><a href="#">الرئيسية</a></li>
-            <li><a href="#">القرّاء</a></li>
-             <li><a href="https://aboelfooz.github.io/conaudio/">الرقية الشرعية</a></li>
-            <li><a href="https://aboelfooz.github.io/live/">بث مباشر</a></li>
-            <li><a href="https://aboelfooz.github.io/help1/">حول التطبيق</a></li>
-            <li><a href="https://aboelfooz.github.io/massages/">تواصل معنا</a></li>
-            <li><a href="https://aboelfooz.github.io/-/">الدعم </a></li>
-            
-           
-            
-            
+            <li><a href="#"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <li><a href="#"><i class="fas fa-users"></i> القرّاء</a></li>
+            <li><a href="https://aboelfooz.github.io/conaudio/"><i class="fas fa-hand-holding-medical"></i> الرقية الشرعية</a></li>
+            <li><a href="https://aboelfooz.github.io/live/"><i class="fas fa-broadcast-tower"></i> بث مباشر</a></li>
+            <li><a href="https://aboelfooz.github.io/help1/"><i class="fas fa-info-circle"></i> حول التطبيق</a></li>
+            <li><a href="https://aboelfooz.github.io/massages/"><i class="fas fa-envelope"></i> تواصل معنا</a></li>
+            <li><a href="https://aboelfooz.github.io/-/"><i class="fas fa-hands-helping"></i> الدعم</a></li>
         </ul>
+        <div class="sidebar-footer">
+            <p>سبحان الله وبحمده، سبحان الله العظيم</p>
+        </div>
     </aside>
     
-
     <!-- المحتوى الرئيسي -->
-    <div class="main-content">
-        <div class="reciters-list">
-            <a href="https://abo1fayz.github.io/Ahmad-elnafes22/" class="reciter">
-                <h2>أحمد النفيس</h2>
-                <p>حفص عن عاصم - مرتل</p>
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1rMA4lTcrf2HiL8C1xalkjVSa8eWlYhNwQQ&s" />
-            </a>
-            
-            
-            <a href="https://aboelfooz.github.io/Balilah/" class="reciter">
-                <h2>بندر بليله</h2>
-                <p>حفص عن عاصم - مرتل</p>
-                <img src="https://i1.sndcdn.com/artworks-7A3LQcQz8Z68yxs2-CbrHiw-t500x500.jpg" >
-            </a>
-            
-            <a href="https://aboelfooz.github.io/Tau/" class="reciter">
-            <h2>توفيق الصايع</h2>
-            <p>حفص عن عاصم - مرتل</p>
-            <img src="https://pbs.twimg.com/profile_images/830444049798688772/ndJSSS7C_400x400.jpg"  />
-        </a>
-        <a href="https://abo1fayz.github.io/Jamal/" class="reciter">
-            <h2> جمال شاكر عبد الله</h2>
-            <p>حفص عن عاصم - مرتل</p>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxA0f_Zt6mR1CiOBFAFurqMQM4alkSyl8vHA&s" alt="" />
-        </a>
-        <a href="https://abo1fayz.github.io/Hut/" class="reciter">
-            <h2> حاتم فريدالواعر</h2>
-            <p>حفص عن عاصم - مرتل</p>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4oBq3vvmZF7sC25kuxdd6Pcrh3Ly1RkE_zg&s" alt="" />
-            
-        </a>
-        <a href="https://aboelfooz.github.io/Hasan/" class="reciter">
-            <h2> حسن صالح  </h2>
-            <p>حفص عن عاصم - مرتل</p>
-            <img src="https://ar.assabile.com/media/photo/full_size/hassan-saleh-1198.jpg" alt="" />
-        </a>
-        
-        
+    <main class="main-content">
+        <section class="reciters-section">
+            <h2 class="section-title"><i class="fas fa-microphone-alt"></i> أشهر القراء</h2>
+            <div class="reciters-list">
+                <!-- قارئ 1 -->
+                <a href="https://abo1fayz.github.io/Ahmad-elnafes22/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1rMA4lTcrf2HiL8C1xalkjVSa8eWlYhNwQQ&s" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3>أحمد النفيس</h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- قارئ 2 -->
+                <a href="https://aboelfooz.github.io/Balilah/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://i1.sndcdn.com/artworks-7A3LQcQz8Z68yxs2-CbrHiw-t500x500.jpg" alt="بندر بليله">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3>بندر بليله</h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+                </a>
+
+
+
+
+                <a href="https://aboelfooz.github.io/Tau/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://pbs.twimg.com/profile_images/830444049798688772/ndJSSS7C_400x400.jpg" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3> توفيق الصايغ </h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
+
+
+
+
+
+
+
+                <a href="https://abo1fayz.github.io/Jamal/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxA0f_Zt6mR1CiOBFAFurqMQM4alkSyl8vHA&s" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3> جمال شاكر عبد الله </h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
+
+
+
+
+
+
+                <a href="https://abo1fayz.github.io/Hut/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4oBq3vvmZF7sC25kuxdd6Pcrh3Ly1RkE_zg&s" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3>حاتم فريدالواعر</h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
+
+
+
+
+
+
+                <a href="https://aboelfooz.github.io/Hasan/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://ar.assabile.com/media/photo/full_size/hassan-saleh-1198.jpg" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3>حسن صالح </h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
+
+
+
+
+
+
                 <a href="https://aboelfooz.github.io/Yaser_el-_doosare/" class="reciter">
-            <h2>  ياسر الدوسري  </h2>
-            <p>حفص عن عاصم - مرتل</p>
-            <img src="data:image/webp;base64,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" alt="فشل تحميل الصورة" />
-        </a>
-        
-        
-        
-         <a href="https://aboelfooz.github.io/Abdelbaset/" class="reciter">
-            <h2>عبد الباسط عبد الصمد</h2>
-            <p>حفص عن عاصم - مرتل</p>
-            <img src="https://www.aljazeera.net/wp-content/uploads/2022/04/2-62.jpg?resize=1920%2C1280&quality=80" alt="" />
-        </a>
-        
-        
-                 <a href="https://aboelfooz.github.io/Islam/" class="reciter">
-            <h2>إسلام صبحي </h2>
-            <p>حفص عن عاصم - مرتل</p>
-            <img src="https://i.pinimg.com/564x/8e/9d/be/8e9dbe0ed53280be5398167d1ccc8b7b.jpg" alt="" />
-        </a>
-        
-        
-        <a href="https://aboelfooz.github.io/maher/" class="reciter">
-            <h2>ماهر المعيقلي </h2>
-            <p>حفص عن عاصم - مرتل</p>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Maher_Al_Mueaqly.png" alt="" />
-        </a>
-        
-        
-        
+                    <div class="reciter-img-container">
+                        <img src="data:image/webp;base64,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" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3> ياسر الدوسري</h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
 
+
+
+
+
+
+                <a href="https://aboelfooz.github.io/Abdelbaset/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://www.aljazeera.net/wp-content/uploads/2022/04/2-62.jpg?resize=1920%2C1280&quality=80" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3> عبد الباسط عبد الصمد</h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
+
+
+
+
+
+                <a href="https://aboelfooz.github.io/Islam/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://i.pinimg.com/564x/8e/9d/be/8e9dbe0ed53280be5398167d1ccc8b7b.jpg" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3>اسلام صبحي </h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
+
+
+
+
+                <a href="https://aboelfooz.github.io/maher/" class="reciter">
+                    <div class="reciter-img-container">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Maher_Al_Mueaqly.png" alt="أحمد النفيس">
+                        <div class="overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="reciter-info">
+                        <h3> ماهر المعيقلي</h3>
+                        <p>حفص عن عاصم - مرتل</p>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </a>
+
+
+                
+                <!-- باقي القراء بنفس الهيكل -->
+                
+            </div>
+        </section>
         
-        
-        
-        
-        
-        
+        <!-- قسم جديد للآيات اليومية -->
+        <section class="daily-ayah">
+            <div class="ayah-container">
+                <h3>آية اليوم</h3>
+                <p class="ayah-text">"وَذَكِّرْ فَإِنَّ الذِّكْرَى تَنفَعُ الْمُؤْمِنِينَ"</p>
+                <p class="ayah-reference">الذاريات: 55</p>
+                <button class="share-btn"><i class="fas fa-share-alt"></i> مشاركة الآية</button>
+            </div>
+        </section>
+    </main>
+    
+    <!-- تذييل الصفحة -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>عن الموقع</h3>
+                <p>موقع القرآن حياة يهدف إلى تسهيل الوصول إلى تلاوات القرآن الكريم بأصوات أشهر القراء.</p>
+            </div>
+            <div class="footer-section">
+                <h3>روابط سريعة</h3>
+                <ul>
+                    <li><a href="https://aboelfooz.github.io/help1/">سياسة الخصوصية</a></li>
+                    <li><a href="#">شروط الاستخدام</a></li>
+                    
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>تواصل معنا</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="#"><i class="fa-brands fa-telegram"></i></a>
+                  
+                </div>
+            </div>
         </div>
-    </div>
-    
-    
-    <p>تم تصميمه بواسطة محمد مسلم الصالح</p>
+        <div class="copyright">
+            <p>تم تصميمه بواسطة محمد مسلم الصالح &copy; <span id="year"></span> - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-    const sidebar = document.querySelector(".sidebar");
-    const menuBtn = document.querySelector(".menu-btn");
-
-    menuBtn.addEventListener("click", function (event) {
-        event.stopPropagation(); // منع إغلاقها عند الضغط على الزر نفسه
-        sidebar.classList.toggle("active");
-    });
-
-    // إغلاق القائمة عند النقر في أي مكان على الصفحة
-    document.addEventListener("click", function () {
-        sidebar.classList.remove("active");
-    });
-
-    // منع إغلاق القائمة عند التفاعل مع الروابط داخلها
-    sidebar.addEventListener("click", function (event) {
-        event.stopPropagation();
-    });
-});
-
-
-
-
-
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
