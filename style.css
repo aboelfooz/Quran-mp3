@@ -293,7 +293,7 @@ header p {
     font-size: 2rem;
     position: relative;
     display: inline-block;
-    left: 50%;
+    left: 90%;
     transform: translateX(-50%);
 }
 
