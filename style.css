@@ -344,6 +344,8 @@ header p {
     overflow: hidden;
 }
 
+.reciter-img-container img{border-radius:12px;}
+
 .reciter img {
     border-radius:8px;
     width: 100%;
