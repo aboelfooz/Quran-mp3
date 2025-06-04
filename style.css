@@ -525,6 +525,26 @@ footer {
     padding: 0 20px;
 }
 
+.mohamed{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.mohamed h2{
+    background-color: #d0fcac;
+    color:  #1aeb07 ;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    
+
+
+}
+
+.mohamed audio{
+    border-radius: 30px;
+}
+
 .footer-section {
     margin-bottom: 30px;
 }
