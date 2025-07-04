@@ -15,38 +15,78 @@
 }
 
 .to1p-btn {
-    
   display: flex;
-  justify-content: space-between;
-  
+  justify-content: space-around;
   align-items: center;
   position: fixed;
-  bottom: 0.001rem;
+  bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 100%;
-  height: 60px;
-  background-color: rgba(255, 255, 255, 0.4);
+  width: 90%;
+  max-width: 500px;
+  height: 70px;
+  background-color: rgba(10, 58, 90, 0.9);
   color: white;
-  font-size: 16px;
-  border-radius: 25px;
+  border-radius: 35px;
   z-index: 9999;
-  cursor: pointer;
-  padding: 20px;
+  padding: 0 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
- .buutnn{
-    width: 25%;
-    height: 100%;
-    margin-left: 20px;
-    background-color:rgba(255, 255, 255, 0.4) ;
-    border: none;
-    border-radius: 10px;
-    border-left: 50px;
-    border-bottom: 10px;
-    color: #000;
-    cursor: pointer;
+.buutnn {
+  width: 30%;
+  height: 80%;
+  background-color: transparent;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  padding: 5px;
+}
+
+.buutnn:hover {
+  background-color: rgba(248, 180, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+.buutnn p {
+  margin: 3px 0;
+  font-size: 0.8rem;
+}
+
+.buutnn i {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: #f8b400;
+}
+
+/* تأثير عند النقر */
+.buutnn:active {
+  transform: translateY(1px);
+}
+
+/* تحسينات للشاشات الصغيرة */
+@media (max-width: 480px) {
+  .to1p-btn {
+    width: 95%;
+    height: 60px;
+  }
+  
+  .buutnn p {
+    font-size: 0.7rem;
+  }
+  
+  .buutnn i {
+    font-size: 1rem;
+  }
 }
 
 /* ====== تنسيق عام للصفحة ====== */
