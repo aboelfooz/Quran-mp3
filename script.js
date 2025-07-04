@@ -122,3 +122,11 @@ document.addEventListener("DOMContentLoaded", function () {
     
     loadRandomAyah();
 });
+function showMessage() {
+    const msg = document.getElementById("mass");
+    msg.style.display = "block";
+
+    setTimeout(() => {
+      msg.style.display = "none";
+    }, 2000); // تختفي بعد 2 ثانية
+  }
