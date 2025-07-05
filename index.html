@@ -19,6 +19,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+
+ <!-- الانترو بدون صورة -->
+<div id="intro" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+     background-color: white; display: flex; justify-content: center; align-items: center;
+     z-index: 9999; transition: opacity 1s ease;">
+  <h1 style="font-family: 'Cairo', sans-serif; font-size: 32px; color: #2e7d32; animation: fadeZoom 1.5s ease;">
+    القرآن حياة
+  </h1>
+</div>
+
+<style>
+@keyframes fadeZoom {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+</style>
+
+<script>
+// بعد 2.5 ثانية، نخفي الانترو
+setTimeout(function() {
+  document.getElementById("intro").style.opacity = "0";
+  setTimeout(function() {
+    document.getElementById("intro").style.display = "none";
+  }, 1000); // وقت الاختفاء النهائي بعد التلاشي
+}, 2500);
+</script>
+
+
+
+
+
+
+
+
+ 
     <!-- شريط التحميل -->
     <div class="progress-bar"></div>
 
