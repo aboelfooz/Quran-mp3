@@ -208,6 +208,32 @@ header p {
     font-style: italic;
 }
 
+.textwht{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    width: 90px;
+    height: 90px;
+    background-color: #1aeb07;
+    
+}
+.what{
+    display: flex;
+    justify-content: space-between;
+}
+.what a{
+    text-align: center;
+    
+    list-style: none;
+    text-decoration: none;
+    
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    color: #fff;
+}
+
 header img {
     margin-top: 20px;
     position: absolute;
