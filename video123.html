@@ -8,12 +8,31 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Arial, sans-serif; background: #000; color: #fff; overflow-x: hidden; }
 
+    .network-status {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      padding: 5px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      z-index: 20;
+      text-align: center;
+    }
+
+    .network-weak { background: rgba(255, 0, 0, 0.7); }
+    .network-medium { background: rgba(255, 165, 0, 0.7); }
+    .network-strong { background: rgba(0, 128, 0, 0.7); }
+
     .video-container {
       position: relative;
       width: 100%;
       height: 100vh;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
     }
 
     .video-item {
@@ -30,9 +49,10 @@
     video {
       width: 100%;
       height: 100%;
-      object-fit: contain; /* يحافظ على النسبة الأصلية للفيديو */
-      background-color: black; /* خلفية سوداء لتجنب التشوه */
+      object-fit: contain;
+      background-color: black;
       cursor: pointer;
+      will-change: transform;
     }
 
     .video-info {
@@ -65,6 +85,53 @@
       z-index: 3;
     }
 
+    .play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      font-size: 24px;
+      z-index: 3;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-item.paused .play-btn {
+      display: flex;
+    }
+
+    .loading-bar {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top: 5px solid #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      z-index: 3;
+      display: none;
+    }
+
+    .video-item.loading .loading-bar {
+      display: block;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
     .controls { position: fixed; top: 15px; right: 15px; z-index: 10; }
     .control-btn { background: rgba(0,0,0,0.5); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
@@ -76,9 +143,37 @@
     .videos-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
     .video-to-delete { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #333; margin-bottom: 5px; border-radius: 5px; }
     .delete-btn { background: #ff3333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+
+    /* أنماط زر الإعجاب الجديدة */
+    .like-btn {
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .like-btn.liked {
+      background: rgba(255,0,0,0.5);
+    }
+
+    .like-icon {
+      font-size: 16px;
+    }
+
+    .like-count {
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
+  <div class="network-status" id="networkStatus">جاري فحص الشبكة...</div>
   <div class="video-container" id="videoContainer">
     <div class="video-item">
       <p>جاري تحميل الفيديوهات...</p>
@@ -98,7 +193,7 @@
       <div class="upload-form" id="adminControls" style="display: none;">
         <h4 style="margin: 15px 0; text-align: center;">رفع فيديو جديد</h4>
         <input type="text" id="videoTitle" placeholder="عنوان الفيديو">
-        <input type="file" id="videoFile" accept="video/*" style="margin-bottom: 15px;">
+        <input type="file" id="videoFile" accept="video/mp4,video/webm" style="margin-bottom: 15px;">
         <button id="uploadBtn">رفع الفيديو</button>
         <p id="status" style="margin-top: 10px; color: #0f0; text-align: center;"></p>
         <div class="videos-list" id="videosList">
@@ -123,10 +218,141 @@
     const adminControls = document.getElementById('adminControls');
     const uploadBtn = document.getElementById('uploadBtn');
     const videosList = document.getElementById('videosList');
+    const networkStatus = document.getElementById('networkStatus');
+
+    // دالة لتحديد حالة الشبكة
+    function updateNetworkStatus() {
+      if (!navigator.connection) {
+        networkStatus.textContent = 'حالة الشبكة غير متاحة';
+        return;
+      }
+
+      const connection = navigator.connection;
+      const effectiveType = connection.effectiveType;
+
+      let statusText = 'حالة الشبكة: ';
+      let statusClass = '';
+
+      switch (effectiveType) {
+        case 'slow-2g':
+        case '2g':
+          statusText += 'ضعيفة';
+          statusClass = 'network-weak';
+          break;
+        case '3g':
+          statusText += 'متوسطة';
+          statusClass = 'network-medium';
+          break;
+        case '4g':
+        default:
+          statusText += 'قوية';
+          statusClass = 'network-strong';
+          break;
+      }
+
+      networkStatus.textContent = statusText;
+      networkStatus.className = `network-status ${statusClass}`;
+    }
+
+    // تحديث حالة الشبكة عند التحميل وعند تغير الاتصال
+    document.addEventListener('DOMContentLoaded', updateNetworkStatus);
+    if (navigator.connection) {
+      navigator.connection.addEventListener('change', updateNetworkStatus);
+    }
+
+    // توليد معرف فريد للمستخدم
+    function generateUserId() {
+      return 'user_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // دالة لتحديث حالة الإعجاب
+    async function updateLikeStatus(videoId) {
+      const userId = localStorage.getItem('userId') || generateUserId();
+      localStorage.setItem('userId', userId);
+      
+      try {
+        // جلب بيانات الفيديو الحالية
+        const { data: videoData, error: fetchError } = await supabase
+          .from('videosa')
+          .select('likes_count, liked_by')
+          .eq('id', videoId)
+          .single();
+        
+        if (fetchError) throw fetchError;
+        
+        const currentLikes = videoData.likes_count || 0;
+        const likedBy = videoData.liked_by || [];
+        const isLiked = likedBy.includes(userId);
+        
+        let newLikes, newLikedBy;
+        
+        if (isLiked) {
+          // إزالة الإعجاب
+          newLikes = currentLikes - 1;
+          newLikedBy = likedBy.filter(id => id !== userId);
+        } else {
+          // إضافة إعجاب
+          newLikes = currentLikes + 1;
+          newLikedBy = [...likedBy, userId];
+        }
+        
+        // تحديث قاعدة البيانات
+        const { error: updateError } = await supabase
+          .from('videosa')
+          .update({
+            likes_count: newLikes,
+            liked_by: newLikedBy
+          })
+          .eq('id', videoId);
+        
+        if (updateError) throw updateError;
+        
+        return { newLikes, isLiked: !isLiked };
+      } catch (err) {
+        console.error('Error updating like status:', err);
+        return null;
+      }
+    }
+
+    // تهيئة أحداث الإعجاب
+    function setupLikeButtons() {
+      document.querySelectorAll('.like-btn').forEach(btn => {
+        const videoId = btn.dataset.videoId;
+        const userId = localStorage.getItem('userId') || generateUserId();
+        localStorage.setItem('userId', userId);
+        
+        // تحميل حالة الإعجاب الحالية
+        supabase.from('videosa')
+          .select('liked_by')
+          .eq('id', videoId)
+          .single()
+          .then(({ data }) => {
+            const likedBy = data?.liked_by || [];
+            if (likedBy.includes(userId)) {
+              btn.classList.add('liked');
+            }
+          });
+        
+        // إضافة حدث النقر
+        btn.addEventListener('click', async () => {
+          const likeCount = btn.querySelector('.like-count');
+          const result = await updateLikeStatus(videoId);
+          
+          if (result) {
+            likeCount.textContent = result.newLikes;
+            if (result.isLiked) {
+              btn.classList.add('liked');
+            } else {
+              btn.classList.remove('liked');
+            }
+          }
+        });
+      });
+    }
 
     async function loadVideos() {
       try {
-        const { data, error } = await supabase.from("videosa").select("*").order("created_at", { ascending: false });
+        const { data, error } = await supabase.from("videosa").select("*").order("created_at", { ascending: false }).limit(10);
         if (error) throw error;
 
         videoContainer.innerHTML = '';
@@ -137,42 +363,104 @@
 
         data.forEach(video => {
           const videoItem = document.createElement('div');
-          videoItem.className = 'video-item';
+          videoItem.className = 'video-item paused';
           videoItem.innerHTML = `
-            <video playsinline autoplay loop muted preload="metadata">
-              <source src="${video.url}" type="video/mp4">
+            <video playsinline loop muted preload="none" data-src="${video.url}" poster="${video.thumbnail || ''}">
+              <source data-src="${video.url}" type="video/mp4">
             </video>
             <button class="sound-btn">🔈</button>
+            <button class="play-btn">▶️</button>
+            <div class="loading-bar"></div>
             <div class="video-info">
               <div class="video-title">${video.title || 'بدون عنوان'}</div>
+              <button class="like-btn" data-video-id="${video.id}">
+                <span class="like-icon">️👍</span>
+                <span class="like-count">${video.likes_count || 0}</span>
+              </button>
             </div>
           `;
           videoContainer.appendChild(videoItem);
-
-          const videoEl = videoItem.querySelector('video');
-          const soundBtn = videoItem.querySelector('.sound-btn');
-
-          soundBtn.addEventListener('click', () => {
-            videoEl.muted = !videoEl.muted;
-            soundBtn.textContent = videoEl.muted ? '🔈' : '🔊';
-          });
-
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                videoEl.play().catch(()=>{}); // منع أي خطأ
-              } else {
-                videoEl.pause();
-              }
-            });
-          }, { threshold: 0.6 });
-          observer.observe(videoEl);
         });
 
+        setupVideoObservers();
+        setupLikeButtons();
         updateVideosList(data);
       } catch (err) {
         console.error('حدث خطأ أثناء تحميل الفيديوهات:', err);
       }
+    }
+
+    function setupVideoObservers() {
+      const videos = document.querySelectorAll('video');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const video = entry.target;
+          const videoItem = video.parentElement;
+          if (entry.isIntersecting) {
+            if (!video.src) {
+              const source = video.querySelector('source');
+              video.src = video.dataset.src;
+              source.src = source.dataset.src;
+              video.load();
+              videoItem.classList.add('loading');
+            }
+            video.play().catch(() => {});
+            videoItem.classList.add('playing');
+            videoItem.classList.remove('paused');
+            videoItem.classList.remove('loading');
+          } else {
+            video.pause();
+            videoItem.classList.remove('playing');
+            videoItem.classList.add('paused');
+            videoItem.classList.remove('loading');
+          }
+        });
+      }, { threshold: 0.5 });
+
+      videos.forEach(video => {
+        observer.observe(video);
+        const videoItem = video.parentElement;
+        const soundBtn = videoItem.querySelector('.sound-btn');
+        const playBtn = videoItem.querySelector('.play-btn');
+        const loadingBar = videoItem.querySelector('.loading-bar');
+
+        soundBtn.addEventListener('click', () => {
+          video.muted = !video.muted;
+          soundBtn.textContent = video.muted ? '🔈' : '🔊';
+        });
+
+        // إضافة مستمع حدث النقر لتبديل حالة التشغيل
+        video.addEventListener('click', () => {
+          if (video.paused) {
+            video.play().catch(() => {});
+            videoItem.classList.add('playing');
+            videoItem.classList.remove('paused');
+            videoItem.classList.remove('loading');
+          } else {
+            video.pause();
+            videoItem.classList.remove('playing');
+            videoItem.classList.add('paused');
+            videoItem.classList.remove('loading');
+          }
+        });
+
+        // التحكم في شريط التحميل
+        video.addEventListener('waiting', () => {
+          videoItem.classList.add('loading');
+        });
+
+        video.addEventListener('playing', () => {
+          videoItem.classList.remove('loading');
+          videoItem.classList.add('playing');
+          videoItem.classList.remove('paused');
+        });
+
+        video.addEventListener('pause', () => {
+          videoItem.classList.remove('loading');
+          videoItem.classList.remove('playing');
+          videoItem.classList.add('paused');
+        });
+      });
     }
 
     async function updateVideosList(videos) {
@@ -182,7 +470,7 @@
       videos.forEach(video => {
         const videoElement = document.createElement('div');
         videoElement.className = 'video-to-delete';
-        videoElement.innerHTML = `<span>${video.title || 'بدون عنوان'}</span>
+        videoElement.innerHTML = `<span>${video.title || 'بدون عنوان'} (${video.likes_count || 0} إعجابات)</span>
           <button class="delete-btn" data-id="${video.id}">حذف</button>`;
         videosList.appendChild(videoElement);
         videoElement.querySelector('.delete-btn').addEventListener('click', () => deleteVideo(video.id));
@@ -209,11 +497,18 @@
 
       try {
         document.getElementById('status').textContent = 'جاري رفع الفيديو...';
-        const { data: uploadData, error: uploadError } = await supabase.storage.from("videos").upload(`public_uploads/${Date.now()}_${file.name}`, file);
+        const fileName = `public_uploads/${Date.now()}_${file.name}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage.from("videos").upload(fileName, file);
         if (uploadError) throw uploadError;
 
-        const { data: { publicUrl } } = supabase.storage.from("videos").getPublicUrl(uploadData.path);
-        const { error: insertError } = await supabase.from("videosa").insert([{ title, url: publicUrl, created_at: new Date().toISOString() }]);
+        const { data: { publicUrl } } = supabase.storage.from("videos").getPublicUrl(fileName);
+        const { error: insertError } = await supabase.from("videosa").insert([{ 
+          title, 
+          url: publicUrl, 
+          created_at: new Date().toISOString(),
+          likes_count: 0,
+          liked_by: []
+        }]);
         if (insertError) throw insertError;
 
         document.getElementById('status').textContent = 'تم رفع الفيديو بنجاح';
