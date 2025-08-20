@@ -319,6 +319,20 @@
         transform: scale(0.9);
       }
     }
+
+    /* تذكر كلمة المرور */
+    .remember-password {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    
+    .remember-password input {
+      width: auto;
+      margin-left: 8px;
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -337,22 +351,19 @@
     <div class="admin-form">
       <h3 style="margin-bottom: 15px; text-align: center;">لوحة التحكم</h3>
       <input type="password" id="adminPassword" placeholder="كلمة المرور">
+      <div class="remember-password">
+        <input type="checkbox" id="rememberPassword">
+        <label for="rememberPassword">تذكر كلمة المرور</label>
+      </div>
       <button id="loginBtn">دخول</button>
+      <button id="logoutBtn" style="display: none; margin-top: 10px; background: #444;">تسجيل الخروج</button>
 
       <div class="upload-form" id="adminControls" style="display: none;">
         <div class="upload-tabs">
-          <button class="upload-tab active" data-tab="upload-file"><i class="las la-upload"></i> رفع ملف</button>
-          <button class="upload-tab" data-tab="external-url"><i class="las la-link"></i> رابط خارجي</button>
+          <button class="upload-tab active" data-tab="external-url"><i class="las la-link"></i> رابط خارجي</button>
         </div>
         
-        <div id="upload-file" class="upload-tab-content active">
-          <h4 style="margin: 15px 0; text-align: center;">رفع فيديو جديد</h4>
-          <input type="text" id="videoTitle" placeholder="عنوان الفيديو">
-          <input type="file" id="videoFile" accept="video/mp4,video/webm" style="margin-bottom: 15px;">
-          <button id="uploadBtn"><i class="las la-cloud-upload-alt"></i> رفع الفيديو</button>
-        </div>
-        
-        <div id="external-url" class="upload-tab-content">
+        <div id="external-url" class="upload-tab-content active">
           <h4 style="margin: 15px 0; text-align: center;">إضافة رابط خارجي</h4>
           <input type="text" id="externalTitle" placeholder="عنوان الفيديو">
           <input type="url" id="externalUrl" placeholder="رابط الفيديو (URL)" style="margin-bottom: 15px;">
@@ -367,23 +378,105 @@
     </div>
   </div>
 
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-    const SUPABASE_URL = "https://ikpijsdqmavklpgunumm.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcGlqc2RxbWF2a2xwZ3VudW1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzNzUzODgsImV4cCI6MjA3MDk1MTM4OH0.uC6t3PgZYOMQuWxFQrFy9aXIR4um0X1Lsf8SkplhZlc";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const ADMIN_PASSWORD = "sup12345";
+  <script>
+    const API_BASE_URL = "https://server1-1-1b4w.onrender.com";
+    const VIDEOS_URL = `${API_BASE_URL}/videos`;
+    const ADMIN_LOGIN_URL = `${API_BASE_URL}/admin-login`;
+    const ADD_VIDEO_URL = `${API_BASE_URL}/add-video`;
 
     const videoContainer = document.getElementById('videoContainer');
     const adminPanel = document.getElementById('adminPanel');
     const adminBtn = document.getElementById('adminBtn');
     const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
     const adminControls = document.getElementById('adminControls');
-    const uploadBtn = document.getElementById('uploadBtn');
     const addExternalBtn = document.getElementById('addExternalBtn');
     const videosList = document.getElementById('videosList');
     const networkStatus = document.getElementById('networkStatus');
+    const rememberPasswordCheckbox = document.getElementById('rememberPassword');
+
+    // دالة تشفير بسيطة (ليست آمنة تمامًا ولكنها كافية لهذا الغرض)
+    function simpleEncrypt(text) {
+      return btoa(encodeURIComponent(text).split('').map(char => 
+        String.fromCharCode(char.charCodeAt(0) + 5)
+      ).join(''));
+    }
+
+    // دالة فك التشفير
+    function simpleDecrypt(encryptedText) {
+      try {
+        return decodeURIComponent(atob(encryptedText).split('').map(char => 
+          String.fromCharCode(char.charCodeAt(0) - 5)
+        ).join(''));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // التحقق من وجود كلمة مرور محفوظة
+    function checkStoredPassword() {
+      const storedEncryptedPassword = localStorage.getItem('adminPassword');
+      if (storedEncryptedPassword) {
+        const decryptedPassword = simpleDecrypt(storedEncryptedPassword);
+        if (decryptedPassword) {
+          // التحقق من صحة كلمة المرور مع السيرفر
+          verifyAdminPassword(decryptedPassword, true);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // التحقق من كلمة المرور مع السيرفر
+    async function verifyAdminPassword(password, autoLogin = false) {
+      try {
+        const response = await fetch(ADMIN_LOGIN_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password })
+        });
+        
+        if (!response.ok) throw new Error('فشل في الاتصال بالسيرفر');
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          adminControls.style.display = 'block';
+          loginBtn.style.display = 'none';
+          logoutBtn.style.display = 'block';
+          document.getElementById('adminPassword').style.display = 'none';
+          document.querySelector('.remember-password').style.display = 'none';
+          
+          if (autoLogin) {
+            document.getElementById('status').textContent = 'تم تسجيل الدخول تلقائياً';
+          } else {
+            document.getElementById('status').textContent = 'تم تسجيل الدخول بنجاح';
+            // حفظ كلمة المرور إذا طلب المستخدم ذلك
+            if (rememberPasswordCheckbox.checked) {
+              const encryptedPassword = simpleEncrypt(password);
+              localStorage.setItem('adminPassword', encryptedPassword);
+            }
+          }
+          
+          setupUploadTabs();
+          return true;
+        } else {
+          document.getElementById('status').textContent = 'كلمة المرور غير صحيحة';
+          return false;
+        }
+      } catch (err) {
+        document.getElementById('status').textContent = 'خطأ في الاتصال بالسيرفر';
+        console.error(err);
+        return false;
+      }
+    }
+
+    // مسح كلمة المرور المحفوظة
+    function clearStoredPassword() {
+      localStorage.removeItem('adminPassword');
+    }
 
     // دالة لتحديد حالة الشبكة
     function updateNetworkStatus() {
@@ -437,14 +530,10 @@
       
       try {
         // جلب بيانات الفيديو الحالية
-        const { data: videoData, error: fetchError } = await supabase
-          .from('videosa')
-          .select('likes_count, liked_by')
-          .eq('id', videoId)
-          .single();
+        const response = await fetch(`${VIDEOS_URL}/${videoId}`);
+        if (!response.ok) throw new Error('فشل في جلب بيانات الفيديو');
         
-        if (fetchError) throw fetchError;
-        
+        const videoData = await response.json();
         const currentLikes = videoData.likes_count || 0;
         const likedBy = videoData.liked_by || [];
         const isLiked = likedBy.includes(userId);
@@ -462,15 +551,18 @@
         }
         
         // تحديث قاعدة البيانات
-        const { error: updateError } = await supabase
-          .from('videosa')
-          .update({
+        const updateResponse = await fetch(`${VIDEOS_URL}/${videoId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
             likes_count: newLikes,
             liked_by: newLikedBy
           })
-          .eq('id', videoId);
+        });
         
-        if (updateError) throw updateError;
+        if (!updateResponse.ok) throw new Error('فشل في تحديث الإعجاب');
         
         return { newLikes, isLiked: !isLiked };
       } catch (err) {
@@ -487,16 +579,15 @@
         localStorage.setItem('userId', userId);
         
         // تحميل حالة الإعجاب الحالية
-        supabase.from('videosa')
-          .select('liked_by')
-          .eq('id', videoId)
-          .single()
-          .then(({ data }) => {
+        fetch(`${VIDEOS_URL}/${videoId}`)
+          .then(response => response.json())
+          .then(data => {
             const likedBy = data?.liked_by || [];
             if (likedBy.includes(userId)) {
               btn.classList.add('liked');
             }
-          });
+          })
+          .catch(err => console.error('Error fetching like status:', err));
         
         // إضافة حدث النقر
         btn.addEventListener('click', async () => {
@@ -522,9 +613,11 @@
 
     async function loadVideos() {
       try {
-        const { data, error } = await supabase.from("videosa").select("*").order("created_at", { ascending: false });
-        if (error) throw error;
-
+        const response = await fetch(VIDEOS_URL);
+        if (!response.ok) throw new Error('فشل في جلب الفيديوهات');
+        
+        const data = await response.json();
+        
         videoContainer.innerHTML = '';
         if (!data || !data.length) {
           videoContainer.innerHTML = `<div class="video-item"><p>لا توجد فيديوهات متاحة حالياً</p></div>`;
@@ -570,6 +663,7 @@
         updateVideosList(data);
       } catch (err) {
         console.error('حدث خطأ أثناء تحميل الفيديوهات:', err);
+        videoContainer.innerHTML = `<div class="video-item"><p>حدث خطأ أثناء تحميل الفيديوهات</p></div>`;
       }
     }
 
@@ -686,8 +780,12 @@
     async function deleteVideo(videoId) {
       if (!confirm('هل أنت متأكد من حذف هذا الفيديو؟')) return;
       try {
-        const { error: deleteError } = await supabase.from('videosa').delete().eq('id', videoId);
-        if (deleteError) throw deleteError;
+        const response = await fetch(`${VIDEOS_URL}/${videoId}`, {
+          method: 'DELETE'
+        });
+        
+        if (!response.ok) throw new Error('فشل في حذف الفيديو');
+        
         document.getElementById('status').textContent = 'تم حذف الفيديو بنجاح';
         await loadVideos();
       } catch (err) {
@@ -695,41 +793,11 @@
         console.error(err);
       }
     }
-
-    async function uploadVideo() {
-      const file = document.getElementById('videoFile').files[0];
-      const title = document.getElementById('videoTitle').value.trim() || file?.name || 'بدون عنوان';
-      if (!file) { document.getElementById('status').textContent = 'يجب اختيار ملف فيديو أولاً'; return; }
-
-      try {
-        document.getElementById('status').textContent = 'جاري رفع الفيديو...';
-        const fileName = `public_uploads/${Date.now()}_${file.name}`;
-        const { data: uploadData, error: uploadError } = await supabase.storage.from("videos").upload(fileName, file);
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage.from("videos").getPublicUrl(fileName);
-        const { error: insertError } = await supabase.from("videosa").insert([{ 
-          title, 
-          url: publicUrl, 
-          created_at: new Date().toISOString(),
-          likes_count: 0,
-          liked_by: []
-        }]);
-        if (insertError) throw insertError;
-
-        document.getElementById('status').textContent = 'تم رفع الفيديو بنجاح';
-        document.getElementById('videoFile').value = '';
-        document.getElementById('videoTitle').value = '';
-        await loadVideos();
-      } catch (err) {
-        document.getElementById('status').textContent = 'فشل في رفع الفيديو: ' + err.message;
-        console.error(err);
-      }
-    }
     
     async function addExternalVideo() {
       const url = document.getElementById('externalUrl').value.trim();
       const title = document.getElementById('externalTitle').value.trim() || 'بدون عنوان';
+      const password = simpleDecrypt(localStorage.getItem('adminPassword')) || '';
       
       if (!url) {
         document.getElementById('status').textContent = 'يجب إدخال رابط الفيديو أولاً';
@@ -739,20 +807,30 @@
       try {
         document.getElementById('status').textContent = 'جاري إضافة الفيديو...';
         
-        const { error: insertError } = await supabase.from("videosa").insert([{ 
-          title, 
-          url: url, 
-          created_at: new Date().toISOString(),
-          likes_count: 0,
-          liked_by: []
-        }]);
+        const response = await fetch(ADD_VIDEO_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            password,
+            title, 
+            url
+          })
+        });
         
-        if (insertError) throw insertError;
+        if (!response.ok) throw new Error('فشل في إضافة الفيديو');
 
-        document.getElementById('status').textContent = 'تم إضافة الفيديو بنجاح';
-        document.getElementById('externalUrl').value = '';
-        document.getElementById('externalTitle').value = '';
-        await loadVideos();
+        const result = await response.json();
+        
+        if (result.success) {
+          document.getElementById('status').textContent = 'تم إضافة الفيديو بنجاح';
+          document.getElementById('externalUrl').value = '';
+          document.getElementById('externalTitle').value = '';
+          await loadVideos();
+        } else {
+          document.getElementById('status').textContent = result.message || 'فشل في إضافة الفيديو';
+        }
       } catch (err) {
         document.getElementById('status').textContent = 'فشل في إضافة الفيديو: ' + err.message;
         console.error(err);
@@ -778,19 +856,41 @@
       });
     }
 
-    adminBtn.addEventListener('click', () => { adminPanel.style.display = 'flex'; });
+    // تسجيل الخروج
+    function logout() {
+      clearStoredPassword();
+      adminControls.style.display = 'none';
+      loginBtn.style.display = 'block';
+      logoutBtn.style.display = 'none';
+      document.getElementById('adminPassword').style.display = 'block';
+      document.querySelector('.remember-password').style.display = 'flex';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('status').textContent = 'تم تسجيل الخروج';
+    }
+
+    adminBtn.addEventListener('click', () => { 
+      adminPanel.style.display = 'flex'; 
+      // التحقق من كلمة المرور المحفوظة عند فتح اللوحة
+      checkStoredPassword();
+    });
+    
     loginBtn.addEventListener('click', () => {
       const password = document.getElementById('adminPassword').value;
-      if (password === ADMIN_PASSWORD) {
-        adminControls.style.display = 'block';
-        document.getElementById('status').textContent = '';
-        setupUploadTabs();
-      } else { document.getElementById('status').textContent = 'كلمة المرور غير صحيحة'; }
+      if (password) {
+        verifyAdminPassword(password);
+      } else {
+        document.getElementById('status').textContent = 'يرجى إدخال كلمة المرور';
+      }
     });
-    uploadBtn.addEventListener('click', uploadVideo);
+    
+    logoutBtn.addEventListener('click', logout);
     addExternalBtn.addEventListener('click', addExternalVideo);
 
-    document.addEventListener('DOMContentLoaded', () => { loadVideos(); });
+    document.addEventListener('DOMContentLoaded', () => { 
+      loadVideos(); 
+      // التحقق من كلمة المرور المحفوظة عند تحميل الصفحة
+      checkStoredPassword();
+    });
   </script>
 </body>
 </html>
